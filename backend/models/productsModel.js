@@ -47,5 +47,9 @@ Product.init({
   modelName: 'Product',
   timestamps: false,
 });
+Product.sync({ alter: true })
+// Product.sync({ alter: true })
+//   .then(() => console.log('Table for Product model updated successfully'))
+//   .catch(error => console.error('Failed to update table for Product model:', error));
 
 export default Product;

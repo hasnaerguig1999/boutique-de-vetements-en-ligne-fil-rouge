@@ -27,5 +27,5 @@ const Category = sequelize.define('categories', {
 Category.sync({ alter: true })
 
 
-
+Category.hasMany(Product);
 export default Category;
