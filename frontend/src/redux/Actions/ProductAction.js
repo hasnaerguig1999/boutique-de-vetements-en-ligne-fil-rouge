@@ -60,11 +60,11 @@ export const updateProduct = (id, updatedData) => async dispatch => {
 
 
 
-// export const deleteProduct = id => async dispatch => {
-//   try {
-//     await axios.delete(`/products/${id}`);
-//     dispatch({ type: DELETE_PRODUCT, payload: id });
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+export const deleteProduct = id => async dispatch => {
+  try {
+    await axios.delete(`/products/${id}`);
+    dispatch({ type: DELETE_PRODUCT, payload: id });
+  } catch (err) {
+    console.error(err);
+  }
+};

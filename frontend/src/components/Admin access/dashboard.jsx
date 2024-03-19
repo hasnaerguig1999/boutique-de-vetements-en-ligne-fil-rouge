@@ -2,9 +2,10 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts, deleteProduct,getProduct, updateProduct } from '../../redux/Actions/ProductAction';
+import { getProducts, deleteProduct, getProduct, updateProduct } from '../../redux/Actions/ProductAction';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Swal from 'sweetalert2';
 
 
 
@@ -18,12 +19,31 @@ export default function Dashboard() {
 
 
 
-  // const handleDelete = (apartmentId) => {
-  //   if (window.confirm('Are you sure you want to delete this apartment?')) {
-  //     dispatch(deleteApartement(apartmentId));
-  //     showAlert('Apartment deleted successfully!', '#E91E63');
-  //   }
-  // };
+  const handleDelete = (productId) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this product!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteProduct(productId));
+        Swal.fire(
+          'Deleted!',
+          'Your product has been deleted.',
+          'success'
+        )
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire(
+          'Cancelled',
+          'Your product is safe :)',
+          'error'
+        )
+      }
+    })
+  };
   const dispatch = useDispatch();
   const { products } = useSelector(state => state.products);
 
@@ -31,12 +51,7 @@ export default function Dashboard() {
     dispatch(getProducts());
   }, [dispatch]);
 
-  // const handleDelete = (productId) => {
-  //   if (window.confirm('Are you sure you want to delete this product?')) {
-  //     dispatch(deleteProduct(productId));
-  //   }
-  // };
-
+ 
 
   const { isLoggedIn, role } = useSelector(state => state.auth.auth);
 
@@ -141,17 +156,17 @@ export default function Dashboard() {
                                   <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
                                 </td>
                                 <td className="align-middle">
-                                  {/* <button className="btn border-none" onClick={() => handleEdit(product.id)}> */}
-                                    <Link to={`/editProduct/${product.id}`} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(product.id)} >
-                                      <FaEdit />
-                                    </Link>
-                                  {/* </button> */}
+                                  <Link to={`/editProduct/${product.id}`} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(product.id)} >
+                                    <FaEdit />
+                                  </Link>
                                 </td>
                                 <td className="align-middle">
-                                  <button className="btn border-none" >
-                                    <a href="#" className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Delete product">
+                                  <button className="btn border-none text-secondary font-weight-bold text-xs" onClick={() => handleDelete(product.id)}
+                                   id='deleteBtn'
+                                  >
+                                    {/* <a href="#" className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Delete product"> */}
                                       <MdDelete />
-                                    </a>
+                                    {/* </a> */}
                                   </button>
                                 </td>
                               </tr>
