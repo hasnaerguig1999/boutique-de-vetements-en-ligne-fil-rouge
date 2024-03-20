@@ -7,6 +7,9 @@ import store from '../src/redux/index';
 import Dashboard from './components/Admin access/dashboard'
 import DisplayProduct from './components/Clients access/DisplayProduct'
 import EditProduct from './components/Admin access/EditProduct'
+import CategoriesManagement from './components/Admin access/CategoriesManagement'
+import EditCategory from './components/Admin access/EditCategory'
+
 import AddProduct from './components/Admin access/AddProduct'
 import AdminRoute from './components/routes/AdminRoute'
 import UserRoute from './components/routes/UserRoute'
@@ -25,6 +28,8 @@ function App() {
             <Route path="/Dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
             <Route path="/EditProduct/:id" element={<AdminRoute><EditProduct /></AdminRoute>} />
             <Route path="/AddProduct" element={<AdminRoute><AddProduct /></AdminRoute>} />
+            <Route path="/CategoriesManagement" element={<AdminRoute><CategoriesManagement /></AdminRoute>} />
+            <Route path="/EditCategory/:id" element={<AdminRoute><EditCategory /></AdminRoute>} />
             <Route path="/DisplayProduct" element={<UserRoute><DisplayProduct /></UserRoute>} />
 
            

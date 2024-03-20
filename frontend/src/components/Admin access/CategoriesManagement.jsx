@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts, deleteProduct, getProduct, updateProduct } from '../../redux/Actions/ProductAction';
+import { getAllCategories,getCategory,deleteCategory} from '../../redux/Actions/CategoryAction';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
@@ -11,44 +11,45 @@ import Swal from 'sweetalert2';
 
 
 
-export default function Dashboard() {
+export default function CategoriesManagement() {
+    
 
-  const handleEdit = (productId) => {
-    dispatch(getProduct(productId));
+  const handleEdit = (categoryId) => {
+    dispatch(getCategory(categoryId));
   };
 
 
 
-  const handleDelete = (productId) => {
+  const handleDelete = (categoryId) => {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You will not be able to recover this product!',
+      text: 'You will not be able to recover this category!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, keep it'
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(deleteProduct(productId));
+        dispatch(deleteCategory(categoryId));
         Swal.fire(
           'Deleted!',
-          'Your product has been deleted.',
+          'Your category has been deleted.',
           'success'
         )
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire(
           'Cancelled',
-          'Your product is safe :)',
+          'Your category is safe :)',
           'error'
         )
       }
     })
   };
   const dispatch = useDispatch();
-  const { products } = useSelector(state => state.products);
+  const { categories } = useSelector(state => state.categories);
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getAllCategories());
   }, [dispatch]);
 
  
@@ -98,7 +99,7 @@ export default function Dashboard() {
 
                     <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                       <div className="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3" id="gradient">
-                        <h6 className="text-white text-capitalize ps-3">Product info</h6>
+                        <h6 className="text-white text-capitalize ps-3">Category info</h6>
                       </div>
                     </div>
                     <div className="card-body px-0 pb-2">
@@ -107,12 +108,8 @@ export default function Dashboard() {
                           <thead>
                             <tr>
                               <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">image</th>
-                              <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">title</th>
+                              <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">description</th>
-                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">old price</th>
-                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> price</th>
-                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">quantity</th>
-                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">in stock</th>
 
 
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">action</th>
@@ -122,46 +119,33 @@ export default function Dashboard() {
                             </tr>
                           </thead>
                           <tbody>
-                            {products.map(product => (
-                              <tr key={product.id}>
+                            {categories.map(category => (
+                              <tr key={category.id}>
                                 <td>
                                   <div className="d-flex px-2 py-1">
                                     <div>
-                                      <img src={product.image} className="avatar avatar-sm me-3 border-radius-lg" alt="product" />
+                                      <img src={category.image} className="avatar avatar-sm me-3 border-radius-lg" alt="category" />
                                     </div>
 
                                   </div>
                                 </td>
                                 <td>
-                                  <p className="text-xs mb-0">{product.title}</p>
+                                  <p className="text-xs mb-0">{category.name}</p>
 
                                 </td>
 
                                 <td>
-                                  <p className="text-xs mb-0">{product.description}</p>
+                                  <p className="text-xs mb-0">{category.description}</p>
 
                                 </td>
-                                <td>
-                                  <p className="text-xs mb-0">{product.oldPrice}</p>
-
-                                </td>
-                                <td>
-                                  <p className="text-xs font-weight-bold mb-0">{product.price}</p>
-
-                                </td>
-                                <td>
-                                  <p className="text-xs font-weight-bold mb-0">{product.quantity}</p>
-                                </td>
-                                <td>
-                                  <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
-                                </td>
+                                
                                 <td className="align-middle">
-                                  <Link to={`/editProduct/${product.id}`} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(product.id)} >
+                                  <Link to={`/EditCategory/${category.id}`} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(category.id)} >
                                     <FaEdit />
                                   </Link>
                                 </td>
                                 <td className="align-middle">
-                                  <button className="btn border-none text-secondary font-weight-bold text-xs" onClick={() => handleDelete(product.id)}
+                                  <button className="btn border-none text-secondary font-weight-bold text-xs" onClick={() => handleDelete(category.id)}
                                    id='deleteBtn'
                                   >
                                       <MdDelete />

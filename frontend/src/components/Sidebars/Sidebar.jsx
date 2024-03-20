@@ -41,11 +41,11 @@ export default function Sidebar() {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link text-white " to="../ApartementManagement">
+                <NavLink className="nav-link text-white " to="../CategoriesManagement">
                   <div className="text-white text-center me-2 d-flex align-items-center justify-content-center">
                     <i className="material-icons opacity-10">table_view</i>
                   </div>
-                  <span className="nav-link-text ms-1"> product Management</span>
+                  <span className="nav-link-text ms-1">  Categories dashboard</span>
                 </NavLink>
               </li>
               {isLoggedIn ? (
