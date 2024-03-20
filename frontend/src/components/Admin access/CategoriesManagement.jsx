@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllCategories,getCategory,deleteCategory} from '../../redux/Actions/CategoryAction';
+import { getAllCategories, getCategory, deleteCategory } from '../../redux/Actions/CategoryAction';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 
 
 export default function CategoriesManagement() {
-    
+
 
   const handleEdit = (categoryId) => {
     dispatch(getCategory(categoryId));
@@ -52,7 +52,7 @@ export default function CategoriesManagement() {
     dispatch(getAllCategories());
   }, [dispatch]);
 
- 
+
 
   const { isLoggedIn, role } = useSelector(state => state.auth.auth);
 
@@ -80,7 +80,7 @@ export default function CategoriesManagement() {
                   <div className="ms-md-auto pe-md-3 d-flex align-items-center">
                     <div className="input-group input-group-outline">
 
-                      <Link className="btn btn-outline-primary btn-sm mb-0 me-0 p-0nav-link text-primary" to="/AddProduct">Add More</Link>
+                      <Link className="btn btn-outline-primary btn-sm mb-0 me-0 p-0nav-link text-primary" to="/AddCategory">Add More</Link>
 
 
                     </div>
@@ -138,17 +138,14 @@ export default function CategoriesManagement() {
                                   <p className="text-xs mb-0">{category.description}</p>
 
                                 </td>
-                                
+
                                 <td className="align-middle">
-                                  <Link to={`/EditCategory/${category.id}`} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(category.id)} >
+                                  <Link to={`/EditCategory/${category.id}`} className="btn btn-primary btn-sm me-2" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(category.id)}>
                                     <FaEdit />
                                   </Link>
-                                </td>
-                                <td className="align-middle">
-                                  <button className="btn border-none text-secondary font-weight-bold text-xs" onClick={() => handleDelete(category.id)}
-                                   id='deleteBtn'
-                                  >
-                                      <MdDelete />
+
+                                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(category.id)} id='deleteBtn'>
+                                    <MdDelete />
                                   </button>
                                 </td>
                               </tr>

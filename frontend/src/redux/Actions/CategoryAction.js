@@ -15,6 +15,7 @@ export const GET_ALL_CATEGORIES = 'GET_ALL_CATEGORIES';
 export const GET_CATEGORY = 'GET_CATEGORY';
 export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';
 export const DELETE_CATEGORY = 'DELETE_CATEGORY';
+export const CREATE_CATEGORY = 'CREATE_CATEGORY';
 
 
 export const getAllCategories = () => async dispatch => {
@@ -51,6 +52,14 @@ export const deleteCategory = (id) => async dispatch => {
   }
 }
 
+export const createCategory = categoryData => async dispatch => {
+  try {
+    const res = await axios.post('/categories', categoryData);
+    dispatch({ type: 'CREATE_CATEGORY', payload: res.data });
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 
 

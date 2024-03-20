@@ -1,5 +1,5 @@
 
-import { GET_ALL_CATEGORIES, GET_CATEGORY } from '../Actions/CategoryAction';
+import { GET_ALL_CATEGORIES, GET_CATEGORY} from '../Actions/CategoryAction';
 
 
 const initialState = {
@@ -26,6 +26,11 @@ const categoryReducer = (state = initialState, action) => {
       return {
         ...state,
         categories: state.categories.filter(category => category.id !== action.payload),
+      };
+      case 'CREATE_CATEGORY':
+      return {
+        ...state,
+        categories: [...state.categories, action.payload],
       };
 
     default:

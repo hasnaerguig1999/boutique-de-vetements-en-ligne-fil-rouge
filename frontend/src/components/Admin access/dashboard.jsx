@@ -51,7 +51,7 @@ export default function Dashboard() {
     dispatch(getProducts());
   }, [dispatch]);
 
- 
+
 
   const { isLoggedIn, role } = useSelector(state => state.auth.auth);
 
@@ -156,15 +156,14 @@ export default function Dashboard() {
                                   <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
                                 </td>
                                 <td className="align-middle">
-                                  <Link to={`/editProduct/${product.id}`} className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(product.id)} >
+                                  <Link to={`/editProduct/${product.id}`} className="btn btn-primary btn-sm me-2" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(product.id)} >
                                     <FaEdit />
                                   </Link>
-                                </td>
-                                <td className="align-middle">
-                                  <button className="btn border-none text-secondary font-weight-bold text-xs" onClick={() => handleDelete(product.id)}
-                                   id='deleteBtn'
+
+                                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(product.id)}
+                                    id='deleteBtn'
                                   >
-                                      <MdDelete />
+                                    <MdDelete />
                                   </button>
                                 </td>
                               </tr>
