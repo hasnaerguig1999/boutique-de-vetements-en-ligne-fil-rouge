@@ -123,9 +123,9 @@ export default function CategoriesManagement() {
                               <tr key={category.id}>
                                 <td>
                                   <div className="d-flex px-2 py-1">
-                                    <div>
-                                      <img src={category.image} className="avatar avatar-sm me-3 border-radius-lg" alt="category" />
-                                    </div>
+                                  <div>
+                                        <img src={`http://localhost:8000/uploads/${category.image}`} className="avatar avatar-sm me-3 border-radius-lg" alt="category" />
+                                      </div>
 
                                   </div>
                                 </td>

@@ -3,6 +3,7 @@ import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts, deleteProduct, getProduct, updateProduct } from '../../redux/Actions/ProductAction';
+import { getCategory } from '../../redux/Actions/CategoryAction';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
@@ -12,6 +13,8 @@ import Swal from 'sweetalert2';
 
 
 export default function Dashboard() {
+
+  
 
   const handleEdit = (productId) => {
     dispatch(getProduct(productId));
@@ -46,6 +49,7 @@ export default function Dashboard() {
   };
   const dispatch = useDispatch();
   const { products } = useSelector(state => state.products);
+  const { categories } = useSelector(state => state.categories);
 
   useEffect(() => {
     dispatch(getProducts());
@@ -113,6 +117,7 @@ export default function Dashboard() {
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> price</th>
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">quantity</th>
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">in stock</th>
+                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category of product</th>
 
 
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">action</th>
@@ -122,52 +127,56 @@ export default function Dashboard() {
                             </tr>
                           </thead>
                           <tbody>
-                            {products.map(product => (
-                              <tr key={product.id}>
-                                <td>
-                                  <div className="d-flex px-2 py-1">
-                                    <div>
-                                      <img src={product.image} className="avatar avatar-sm me-3 border-radius-lg" alt="product" />
+                            {products.map(product => {
+                              return (
+                                <tr key={product.id}>
+                                  <td>
+                                    <div className="d-flex px-2 py-1">
+                                      <div>
+                                        <img src={`http://localhost:8000/uploads/${product.image}`} className="avatar avatar-sm me-3 border-radius-lg" alt="product" />
+                                      </div>
                                     </div>
+                                  </td>
+                                  <td>
+                                    <p className="text-xs mb-0">{product.title}</p>
 
-                                  </div>
-                                </td>
-                                <td>
-                                  <p className="text-xs mb-0">{product.title}</p>
+                                  </td>
 
-                                </td>
+                                  <td>
+                                    <p className="text-xs mb-0">{product.description}</p>
 
-                                <td>
-                                  <p className="text-xs mb-0">{product.description}</p>
+                                  </td>
+                                  <td>
+                                    <p className="text-xs mb-0">{product.oldPrice}</p>
 
-                                </td>
-                                <td>
-                                  <p className="text-xs mb-0">{product.oldPrice}</p>
+                                  </td>
+                                  <td>
+                                    <p className="text-xs font-weight-bold mb-0">{product.price}</p>
 
-                                </td>
-                                <td>
-                                  <p className="text-xs font-weight-bold mb-0">{product.price}</p>
+                                  </td>
+                                  <td>
+                                    <p className="text-xs font-weight-bold mb-0">{product.quantity}</p>
+                                  </td>
+                                  <td>
+                                    <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
+                                  </td>
+                                  <td>
+                                    <p className="text-xs font-weight-bold mb-0">{ product.category?.name }</p>
+                                  </td>
+                                  <td className="align-middle">
+                                    <Link to={`/editProduct/${product.id}`} className="btn btn-primary btn-sm me-2" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(product.id)} >
+                                      <FaEdit />
+                                    </Link>
 
-                                </td>
-                                <td>
-                                  <p className="text-xs font-weight-bold mb-0">{product.quantity}</p>
-                                </td>
-                                <td>
-                                  <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
-                                </td>
-                                <td className="align-middle">
-                                  <Link to={`/editProduct/${product.id}`} className="btn btn-primary btn-sm me-2" data-toggle="tooltip" data-original-title="Edit product" onClick={() => handleEdit(product.id)} >
-                                    <FaEdit />
-                                  </Link>
-
-                                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(product.id)}
-                                    id='deleteBtn'
-                                  >
-                                    <MdDelete />
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
+                                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(product.id)}
+                                      id='deleteBtn'
+                                    >
+                                      <MdDelete />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>

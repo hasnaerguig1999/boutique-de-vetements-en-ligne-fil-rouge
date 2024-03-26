@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProduct, getProduct } from '../../redux/Actions/ProductAction';
+import { getAllCategories } from '../../redux/Actions/CategoryAction';
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function EditProduct() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const product = useSelector(state => state.products.product);
+  const { categories } = useSelector(state => state.categories);
+  const [categoryId, setCategoryId] = useState('');
 
   const [productData, setProductData] = useState({
     title: '',
@@ -18,31 +22,51 @@ export default function EditProduct() {
     oldPrice: '',
     quantity: '',
     inStock: '',
-    image: ''
-  });
+    image: '',
+    categoryId: ''
 
-  const handleChangeImage = (e) => {
-    setProductData({
-      ...productData,
-      image: URL.createObjectURL(e.target.files[0])
-    });
+  });
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+    axios.post('/upload', formData)
+      .then(res => res.data)
+      .then(({ filename }) => {
+        setProductData({
+          ...productData,
+          image: filename
+        });
+      });
   };
 
 
+
   useEffect(() => {
+    dispatch(getAllCategories());
     dispatch(getProduct(id));
   }, [dispatch, id]);
 
   useEffect(() => {
     if (product) {
-      setProductData(product);
+      setProductData({
+        ...product,
+        categoryId: product.categoryId
+      });
     }
   }, [product]);
 
 
+
+
+
+
   const handleUpdate = async (id) => {
     try {
-      await dispatch(updateProduct(id, productData));
+      dispatch(updateProduct(id, productData)); 
+      // console.log(productData)
+      
       Swal.fire(
         'Updated!',
         'Your product has been updated.',
@@ -60,9 +84,18 @@ export default function EditProduct() {
   };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setProductData({
       ...productData,
-      [e.target.name]: e.target.value
+      [name]: value
+    });
+  };
+
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    setProductData({
+      ...productData,
+      categoryId
     });
   };
   return (
@@ -109,8 +142,16 @@ export default function EditProduct() {
                           <input type="text" className="form-control" placeholder='inStock' name="inStock" value={productData.inStock} onChange={handleChange} />
                         </div>
                         <div className="input-group input-group-outline mb-3">
-                          <input type="file" className="form-control" placeholder='Image' name="image" onChange={handleChangeImage} />
-                          {productData.image && <img src={productData.image} style={{width:'41px'}} alt="Product" />}
+                          <select type="text" className="form-control" name="categoryId"  onChange={handleCategoryChange}>
+                            <option>select category name</option>
+                            {categories.map(category => (
+                              <option key={category.id} value={category.id}>{category.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="input-group input-group-outline mb-3">
+                          <input type="file" className="form-control" placeholder='Image' name="image" onChange={handleImageChange} />
+                          {productData.image && <img src={productData.image} style={{ width: '41px' }} alt="Product" />}
                         </div>
 
                         <div className="text-center">

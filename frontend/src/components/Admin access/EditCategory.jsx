@@ -4,6 +4,7 @@ import { updateCategory, getCategory } from '../../redux/Actions/CategoryAction'
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function EditCategory() {
   const dispatch = useDispatch();
@@ -17,12 +18,21 @@ export default function EditCategory() {
     image: ''
   });
 
-  const handleChangeImage = (e) => {
-    setCategoryData({
-      ...categoryData,
-      image: URL.createObjectURL(e.target.files[0])
-    });
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+    axios.post('/upload', formData)
+      .then(res => res.data)
+      .then(({ filename }) => {
+        setCategoryData({
+          ...categoryData,
+          image: filename
+        });
+      });
   };
+  
 
 
   useEffect(() => {
@@ -93,7 +103,7 @@ export default function EditCategory() {
                           <input type="text" className="form-control" placeholder='Description' name="description" value={categoryData.description} onChange={handleChange} />
                         </div>
                         <div className="input-group input-group-outline mb-3">
-                          <input type="file" className="form-control" placeholder='Image' name="image" onChange={handleChangeImage} />
+                          <input type="file" className="form-control" placeholder='Image' name="image" onChange={handleImageChange} />
                           {categoryData.image && <img src={categoryData.image} style={{width:'41px'}} alt="category" />}
                         </div>
 

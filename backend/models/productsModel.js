@@ -37,7 +37,7 @@ Product.init({
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  category_id: {
+  categoryId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     field: 'categoryId',

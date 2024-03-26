@@ -1,39 +1,30 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts, deleteProduct, getProduct } from '../../redux/Actions/ProductAction';
+import { getProduct } from '../../redux/Actions/ProductAction';
 import { getCategory } from '../../redux/Actions/CategoryAction';
-import { IoEyeSharp } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
 import Swal from 'sweetalert2';
 
 
-
-
-
-export default function DisplayProduct() {
-
-
-
-  const handleEdit = (productId) => {
-    dispatch(getProduct(productId));
-  };
-
-
-
-
-  const dispatch = useDispatch();
-  const { products } = useSelector(state => state.products);
-  const { categories } = useSelector(state => state.categories);
-
+export default function ProductDetail() {
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const product = useSelector(state => state.products.product);
+    const { categories } = useSelector(state => state.categories);
+    const { isLoggedIn, role } = useSelector(state => state.auth.auth);
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    dispatch(getProduct(id));
+  }, [dispatch, id]);
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
 
 
-  const { isLoggedIn, role } = useSelector(state => state.auth.auth);
+ 
 
 
 
@@ -96,16 +87,15 @@ export default function DisplayProduct() {
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category of product</th>
 
 
-                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">action</th>
                               <th className="text-secondary opacity-7"> </th>
 
 
                             </tr>
                           </thead>
                           <tbody>
-                            {products.map(product => {
-                              return (
-                                <tr key={product.id}>
+                            
+                             
+                                <tr >
                                   <td>
                                     <div className="d-flex px-2 py-1">
                                       <div>
@@ -137,16 +127,11 @@ export default function DisplayProduct() {
                                     <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
                                   </td>
                                   <td>
-                                    <p className="text-xs font-weight-bold mb-0">{product.category?.name}</p>
+                                    <p className="text-xs font-weight-bold mb-0">{ product.category?.name }</p>
                                   </td>
-                                  <td className="align-middle">
-                                    <Link to={`/ProductDetail/${product.id}`} className="btn btn-primary btn-sm me-2" data-toggle="tooltip" data-original-title="Display product">
-                                    <IoEyeSharp />
-                                    </Link>
-                                  </td>
+                                  
                                 </tr>
-                              );
-                            })}
+                             
                           </tbody>
                         </table>
                       </div>

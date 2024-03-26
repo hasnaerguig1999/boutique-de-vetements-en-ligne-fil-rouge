@@ -14,6 +14,7 @@ import AddCategory from './components/Admin access/AddCategory'
 import AddProduct from './components/Admin access/AddProduct'
 import AdminRoute from './components/routes/AdminRoute'
 import UserRoute from './components/routes/UserRoute'
+import ProductDetail from './components/Clients access/ProductDetail'
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/CategoriesManagement" element={<AdminRoute><CategoriesManagement /></AdminRoute>} />
             <Route path="/EditCategory/:id" element={<AdminRoute><EditCategory /></AdminRoute>} />
             <Route path="/DisplayProduct" element={<UserRoute><DisplayProduct /></UserRoute>} />
+            <Route path="/ProductDetail/:id" element={<UserRoute><ProductDetail /></UserRoute>} />
 
            
           </Routes>

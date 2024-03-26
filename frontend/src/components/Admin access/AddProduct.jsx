@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createProduct } from '../../redux/Actions/ProductAction';
 import { getAllCategories } from '../../redux/Actions/CategoryAction';
+import axios from 'axios';
 
 
 
@@ -50,6 +51,18 @@ const AddProduct = () => {
 
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return
+    const formData = new FormData();
+    formData.append('image', file);
+    axios.post('/upload', formData).
+      then(res => res.data)
+      .then(({ filename }) => {
+        setImage(filename)
+      })
+  }
+
 
 
 
@@ -90,19 +103,19 @@ const AddProduct = () => {
                             <input type="text" className="form-control" placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} />
                           </div>
                           <div className="input-group input-group-outline my-3">
-                            <input type="text" className="form-control" placeholder='Price' value={price} onChange={(e) => setPrice(e.target.value)} />
+                            <input type="number" className="form-control"  placeholder='Price' value={price} onChange={(e) => setPrice(e.target.value)} />
                           </div>
                           <div className="input-group input-group-outline my-3">
-                            <input type="text" className="form-control" placeholder='OLD Price' value={oldPrice} onChange={(e) => setOldPrice(e.target.value)} />
+                            <input type="number" className="form-control"  placeholder='OLD Price' value={oldPrice} onChange={(e) => setOldPrice(e.target.value)} />
                           </div>
                           <div className="input-group input-group-outline my-3">
-                            <input type="text" className="form-control" placeholder='quantity' value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+                            <input type="number" className="form-control"  placeholder='quantity' value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                           </div>
                           <div className="input-group input-group-outline my-3">
-                            <input type="text" className="form-control" placeholder='inStock' value={inStock} onChange={(e) => setInStock(e.target.value)} />
+                            <input type="number" className="form-control"  placeholder='inStock' value={inStock} onChange={(e) => setInStock(e.target.value)} />
                           </div>
                           <div className="input-group input-group-outline my-3">
-                            <input type="file" className="form-control" placeholder='Image' value={image} onChange={(e) => setImage(e.target.value)} />
+                            <input type="file" className="form-control" placeholder='Image' onChange={handleImageChange} />
                           </div>
                           <div className="input-group input-group-outline mb-3">
                             <select type="text" className="form-control" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>

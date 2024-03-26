@@ -1,5 +1,5 @@
 
-import { GET_ALL_CATEGORIES, GET_CATEGORY} from '../Actions/CategoryAction';
+import { GET_ALL_CATEGORIES, GET_CATEGORY,UPDATE_CATEGORY} from '../Actions/CategoryAction';
 
 
 const initialState = {
@@ -32,6 +32,13 @@ const categoryReducer = (state = initialState, action) => {
         ...state,
         categories: [...state.categories, action.payload],
       };
+      case UPDATE_CATEGORY:
+        return {
+          ...state,
+          categories: state.categories.map(category =>
+            category.id === action.payload.id ? action.payload : category
+          ),
+        };
 
     default:
       return state;

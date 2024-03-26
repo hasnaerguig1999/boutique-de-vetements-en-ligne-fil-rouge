@@ -1,5 +1,5 @@
 
-import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT ,PRODUCT_CREATE_SUCCESS} from '../Actions/ProductAction';
+import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT ,PRODUCT_CREATE_SUCCESS,UPDATE_PRODUCT_CATEGORY} from '../Actions/ProductAction';
 
 // Initial state
 const initialState = {
@@ -42,6 +42,13 @@ const productReducer = (state = initialState, action) => {
       return {
         ...state,
         products: state.products.filter(product => product.id !== action.payload),
+      };
+      case UPDATE_PRODUCT_CATEGORY:
+      return {
+        ...state,
+        products: state.products.map(product =>
+          product.id === action.payload.id ? { ...product, categoryId: action.payload.categoryId } : product
+        ),
       };
     default:
       return state;

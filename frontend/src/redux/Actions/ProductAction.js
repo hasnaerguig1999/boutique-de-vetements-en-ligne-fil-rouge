@@ -17,6 +17,7 @@ export const CREATE_PRODUCT = 'CREATE_PRODUCT';
 export const PRODUCT_CREATE_SUCCESS = 'PRODUCT_CREATE_SUCCESS';
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
+export const UPDATE_PRODUCT_CATEGORY = 'UPDATE_PRODUCT_CATEGORY';
 
 // Action creators
 export const getProducts = () => async dispatch => {
@@ -50,13 +51,11 @@ export const createProduct = productData => async dispatch => {
 export const updateProduct = (id, updatedData) => async dispatch => {
   try {
     const res = await axios.put(`/products/${id}`, updatedData);
-    dispatch({ type: UPDATE_PRODUCT, payload: res.data });
+    dispatch(getProducts())    
   } catch (err) {
     console.error(err);
   }
 };
-
-
 
 
 

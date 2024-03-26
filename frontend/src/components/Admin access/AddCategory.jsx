@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createCategory } from '../../redux/Actions/CategoryAction';
+import axios from 'axios';
 
 
 
@@ -35,6 +36,17 @@ const AddCategory = () => {
 
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return
+        const formData = new FormData();
+        formData.append('image', file);
+        axios.post('/upload', formData).
+            then(res => res.data)
+            .then(({ filename }) => {
+                setImage(filename)
+            })
+    }
 
 
 
@@ -75,7 +87,7 @@ const AddCategory = () => {
                                                         <input type="text" className="form-control" placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} />
                                                     </div>
                                                     <div className="input-group input-group-outline my-3">
-                                                        <input type="file" className="form-control" placeholder='Image' value={image} onChange={(e) => setImage(e.target.value)} />
+                                                        <input type="file" className="form-control" placeholder='Image' onChange={handleImageChange} />
                                                     </div>
 
                                                     <div className="text-center">
