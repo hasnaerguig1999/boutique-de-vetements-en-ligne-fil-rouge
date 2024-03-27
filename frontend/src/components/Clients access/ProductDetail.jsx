@@ -2,18 +2,20 @@ import { Link, useParams } from 'react-router-dom';
 import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProduct } from '../../redux/Actions/ProductAction';
+import { getProduct, addToCart } from '../../redux/Actions/ProductAction';
 import { getCategory } from '../../redux/Actions/CategoryAction';
-import { FaEdit } from "react-icons/fa";
+import { FaCartArrowDown } from "react-icons/fa";
 import Swal from 'sweetalert2';
 
 
+
 export default function ProductDetail() {
-    const { id } = useParams();
-    const dispatch = useDispatch();
-    const product = useSelector(state => state.products.product);
-    const { categories } = useSelector(state => state.categories);
-    const { isLoggedIn, role } = useSelector(state => state.auth.auth);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const product = useSelector(state => state.products.product);
+  const { categories } = useSelector(state => state.categories);
+  const [quantity, setQuantity] = useState(1);
+  const { isLoggedIn, role } = useSelector(state => state.auth.auth);
   useEffect(() => {
     dispatch(getProduct(id));
   }, [dispatch, id]);
@@ -23,8 +25,19 @@ export default function ProductDetail() {
   }
 
 
+  const addToCartHandler = () => {
+    dispatch(addToCart(id, quantity));
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Product has been added to cart',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  };
 
- 
+
+
 
 
 
@@ -50,7 +63,7 @@ export default function ProductDetail() {
                   <div className="ms-md-auto pe-md-3 d-flex align-items-center">
                     <div className="input-group input-group-outline">
 
-                      <Link className="btn btn-outline-primary btn-sm mb-0 me-0 p-0nav-link text-primary" to="/AddProduct">Add More</Link>
+                      <Link className="btn btn-outline-primary btn-sm mb-0 me-0 p-0nav-link text-primary" >Cart</Link>
 
 
                     </div>
@@ -84,7 +97,9 @@ export default function ProductDetail() {
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> price</th>
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">quantity</th>
                               <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">in stock</th>
-                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category of product</th>
+                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> quantity</th>
+
+                              <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cart</th>
 
 
                               <th className="text-secondary opacity-7"> </th>
@@ -93,45 +108,58 @@ export default function ProductDetail() {
                             </tr>
                           </thead>
                           <tbody>
-                            
-                             
-                                <tr >
-                                  <td>
-                                    <div className="d-flex px-2 py-1">
-                                      <div>
-                                        <img src={`http://localhost:8000/uploads/${product.image}`} className="avatar avatar-sm me-3 border-radius-lg" alt="product" />
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs mb-0">{product.title}</p>
 
-                                  </td>
 
-                                  <td>
-                                    <p className="text-xs mb-0">{product.description}</p>
+                            <tr >
+                              <td>
+                                <div className="d-flex px-2 py-1">
+                                  <div>
+                                    <img src={`http://localhost:8000/uploads/${product.image}`} className="border-radius-lg" style={{ width: '100%', height: '70%' }} alt="product" />
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <p className="text-xs mb-0">{product.title}</p>
 
-                                  </td>
-                                  <td>
-                                    <p className="text-xs mb-0">{product.oldPrice}</p>
+                              </td>
 
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">{product.price}</p>
+                              <td>
+                                <p className="text-xs mb-0">{product.description}</p>
 
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">{product.quantity}</p>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
-                                  </td>
-                                  <td>
-                                    <p className="text-xs font-weight-bold mb-0">{ product.category?.name }</p>
-                                  </td>
-                                  
-                                </tr>
-                             
+                              </td>
+                              <td>
+                                <p className="text-xs mb-0">{product.oldPrice}</p>
+
+                              </td>
+                              <td>
+                                <p className="text-xs font-weight-bold mb-0">{product.price}</p>
+
+                              </td>
+                              <td>
+                                <p className="text-xs font-weight-bold mb-0">{product.quantity}</p>
+                              </td>
+                              <td>
+                                <p className="text-xs font-weight-bold mb-0">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
+                              </td>
+                              <td>
+                                <div className="input-group mt-3" style={{ width: '148px' }}>
+                                  <button className="btn btn-outline-secondary mr-2" type="button" id="button-addon1" onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>
+                                    -
+                                  </button>
+                                  <input type="text" className="form-control text-center mx-2" value={quantity} readOnly />
+                                  <button className="btn btn-outline-secondary ml-2" style={{ borderRadius: '8px' }} type="button" id="button-addon2" onClick={() => setQuantity(quantity + 1)}>
+                                    +
+                                  </button>
+                                </div>
+                              </td>
+                              <td>
+                                <button className="btn bg-gradient-success w-100 my-4 mb-4 ml-2" onClick={addToCartHandler}>
+                                  <FaCartArrowDown />
+                                </button>
+                              </td>
+
+                            </tr>
+
                           </tbody>
                         </table>
                       </div>

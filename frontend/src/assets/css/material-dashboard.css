@@ -20434,11 +20434,7 @@ fieldset:disabled .btn {
   margin-top: -29px;
 }
 
-.avatar-sm {
-  width: 36px !important;
-  height: 36px !important;
-  font-size: 0.875rem;
-}
+
 
 .avatar-sm.avatar-raised {
   margin-top: -18px;

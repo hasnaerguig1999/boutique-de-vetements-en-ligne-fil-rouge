@@ -18,6 +18,8 @@ export const PRODUCT_CREATE_SUCCESS = 'PRODUCT_CREATE_SUCCESS';
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const UPDATE_PRODUCT_CATEGORY = 'UPDATE_PRODUCT_CATEGORY';
+export const ADD_TO_CART = 'ADD_TO_CART';
+
 
 // Action creators
 export const getProducts = () => async dispatch => {
@@ -63,6 +65,34 @@ export const deleteProduct = id => async dispatch => {
   try {
     await axios.delete(`/products/${id}`);
     dispatch({ type: DELETE_PRODUCT, payload: id });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const addToCart = (id, quantity) => async dispatch => {
+  try {
+    const res = await axios.get(`/products/${id}`);
+    const product = res.data;
+
+    let cart = localStorage.getItem('cart')
+      ? JSON.parse(localStorage.getItem('cart'))
+      : [];
+
+    const existItem = cart.find(x => x.product.id === product.id);
+
+    if (existItem) {
+      cart = cart.map(x => x.product.id === existItem.product.id ? { product, quantity } : x);
+    } else {
+      cart.push({ product, quantity });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    dispatch({
+      type: ADD_TO_CART,
+      payload: cart
+    });
   } catch (err) {
     console.error(err);
   }

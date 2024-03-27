@@ -1,11 +1,12 @@
 
-import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT ,PRODUCT_CREATE_SUCCESS,UPDATE_PRODUCT_CATEGORY} from '../Actions/ProductAction';
+import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT ,PRODUCT_CREATE_SUCCESS,UPDATE_PRODUCT_CATEGORY,ADD_TO_CART} from '../Actions/ProductAction';
 
 // Initial state
 const initialState = {
   products: [],
   success: false,
   product: null,
+  cartItems: [],
 };
 
 // Reducer
@@ -50,6 +51,21 @@ const productReducer = (state = initialState, action) => {
           product.id === action.payload.id ? { ...product, categoryId: action.payload.categoryId } : product
         ),
       };
+      case ADD_TO_CART:
+        const item = action.payload;
+        const existItem = state.cartItems.find(x => x.product.id === item.product.id);
+  
+        if (existItem) {
+          return {
+            ...state,
+            cartItems: state.cartItems.map(x => x.product.id === existItem.product.id ? item : x)
+          };
+        } else {
+          return {
+            ...state,
+            cartItems: [...state.cartItems, item]
+          };
+        }
     default:
       return state;
   }
