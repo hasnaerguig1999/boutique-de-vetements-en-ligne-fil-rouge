@@ -1,13 +1,15 @@
 
 import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT ,PRODUCT_CREATE_SUCCESS,UPDATE_PRODUCT_CATEGORY,ADD_TO_CART} from '../Actions/ProductAction';
+import  {getCartFromLocalStorage} from '../utils/localStorage';
 
 // Initial state
 const initialState = {
   products: [],
   success: false,
   product: null,
-  cartItems: [],
+  cartItems: getCartFromLocalStorage()
 };
+
 
 // Reducer
 const productReducer = (state = initialState, action) => {
@@ -52,20 +54,12 @@ const productReducer = (state = initialState, action) => {
         ),
       };
       case ADD_TO_CART:
-        const item = action.payload;
-        const existItem = state.cartItems.find(x => x.product.id === item.product.id);
-  
-        if (existItem) {
-          return {
+        return(
+          {
             ...state,
-            cartItems: state.cartItems.map(x => x.product.id === existItem.product.id ? item : x)
-          };
-        } else {
-          return {
-            ...state,
-            cartItems: [...state.cartItems, item]
-          };
-        }
+            cartItems: getCartFromLocalStorage()
+          }
+        )
     default:
       return state;
   }

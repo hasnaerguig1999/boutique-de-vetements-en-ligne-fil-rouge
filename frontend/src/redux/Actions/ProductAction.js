@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCartFromLocalStorage, saveCartToLocalStorage } from '../utils/localStorage';
 axios.defaults.baseURL = "http://localhost:8000"
 axios.interceptors.request.use((req) => {
   if (!localStorage.getItem('userData')) return req
@@ -19,6 +20,7 @@ export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const UPDATE_PRODUCT_CATEGORY = 'UPDATE_PRODUCT_CATEGORY';
 export const ADD_TO_CART = 'ADD_TO_CART';
+export const INIT_CART = 'INIT_CART';
 
 
 // Action creators
@@ -70,30 +72,11 @@ export const deleteProduct = id => async dispatch => {
   }
 };
 
-export const addToCart = (id, quantity) => async dispatch => {
-  try {
-    const res = await axios.get(`/products/${id}`);
-    const product = res.data;
-
-    let cart = localStorage.getItem('cart')
-      ? JSON.parse(localStorage.getItem('cart'))
-      : [];
-
-    const existItem = cart.find(x => x.product.id === product.id);
-
-    if (existItem) {
-      cart = cart.map(x => x.product.id === existItem.product.id ? { product, quantity } : x);
-    } else {
-      cart.push({ product, quantity });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-    dispatch({
+export const addToCart = (product, quantity) => {
+    const newProduct  = {product, quantity };
+    saveCartToLocalStorage([...getCartFromLocalStorage(),newProduct])
+    return{
       type: ADD_TO_CART,
-      payload: cart
-    });
-  } catch (err) {
-    console.error(err);
-  }
+    };
+
 };

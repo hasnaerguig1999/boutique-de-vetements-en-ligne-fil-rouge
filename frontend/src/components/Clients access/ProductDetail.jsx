@@ -6,19 +6,31 @@ import { getProduct, addToCart } from '../../redux/Actions/ProductAction';
 import { getCategory } from '../../redux/Actions/CategoryAction';
 import { FaCartArrowDown } from "react-icons/fa";
 import Swal from 'sweetalert2';
+import { Modal, Button } from 'react-bootstrap';
 
 
 
 export default function ProductDetail() {
+
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const { id } = useParams();
   const dispatch = useDispatch();
   const product = useSelector(state => state.products.product);
   const { categories } = useSelector(state => state.categories);
+  // const cartItems = useSelector(state => state.products.cartItems);
+  const cartItems = useSelector(state => state.products.cartItems);
+
+
   const [quantity, setQuantity] = useState(1);
   const { isLoggedIn, role } = useSelector(state => state.auth.auth);
   useEffect(() => {
     dispatch(getProduct(id));
   }, [dispatch, id]);
+
 
   if (!product) {
     return <div>Loading...</div>;
@@ -26,14 +38,20 @@ export default function ProductDetail() {
 
 
   const addToCartHandler = () => {
-    dispatch(addToCart(id, quantity));
-    Swal.fire({
-      position: 'top-end',
-      icon: 'success',
-      title: 'Product has been added to cart',
-      showConfirmButton: false,
-      timer: 1500
-    })
+    if (product && quantity) {
+
+      dispatch(addToCart(product, quantity));
+
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Product has been added to cart',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    } else {
+      console.error('Product id or quantity is undefined');
+    }
   };
 
 
@@ -63,8 +81,38 @@ export default function ProductDetail() {
                   <div className="ms-md-auto pe-md-3 d-flex align-items-center">
                     <div className="input-group input-group-outline">
 
-                      <Link className="btn btn-outline-primary btn-sm mb-0 me-0 p-0nav-link text-primary" >Cart</Link>
+                      <Link className="btn btn-outline-primary btn-sm mb-0 me-0 p-0nav-link text-primary" onClick={handleShow}>Cart</Link>
 
+                      <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                          <Modal.Title>Cart</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+
+                          {cartItems && cartItems.map((item, index) => (
+                            item.product &&
+                            <div key={index} className="card mb-3">
+                              <div className="row g-0">
+                                <div className="col-md-4">
+                                  <img src={`http://localhost:8000/uploads/${item.product.image} `} className="img-fluid rounded-start" />
+                                </div>
+                                <div className="col-md-8">
+                                  <div className="card-body">
+                                    <h5 className="card-title">{item.product.title}</h5>
+                                    <p className="card-text">{item.product.description}</p>
+                                    <p className="card-text"><small className="text-muted">Quantity: {item.quantity}</small></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Close
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
 
                     </div>
                   </div>
