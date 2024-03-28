@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProduct, addToCart } from '../../redux/Actions/ProductAction';
 import { getCategory } from '../../redux/Actions/CategoryAction';
-import { FaCartArrowDown } from "react-icons/fa";
+import { FaCartArrowDown, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from 'sweetalert2';
 import { Modal, Button } from 'react-bootstrap';
 
@@ -23,7 +23,7 @@ export default function ProductDetail() {
   const { categories } = useSelector(state => state.categories);
   // const cartItems = useSelector(state => state.products.cartItems);
   const cartItems = useSelector(state => state.products.cartItems);
-
+  const total = cartItems.reduce((acc, item) => item.product ? acc + item.product.price * item.quantity : acc, 0);
 
   const [quantity, setQuantity] = useState(1);
   const { isLoggedIn, role } = useSelector(state => state.auth.auth);
@@ -89,24 +89,36 @@ export default function ProductDetail() {
                         </Modal.Header>
                         <Modal.Body>
 
+
                           {cartItems && cartItems.map((item, index) => (
                             item.product &&
                             <div key={index} className="card mb-3">
                               <div className="row g-0">
                                 <div className="col-md-4">
-                                  <img src={`http://localhost:8000/uploads/${item.product.image} `} className="img-fluid rounded-start" />
+                                  <img src={`http://localhost:8000/uploads/${item.product.image}`} className="img-fluid rounded-start" style={{ maxWidth: '150px' }} />
                                 </div>
                                 <div className="col-md-8">
                                   <div className="card-body">
                                     <h5 className="card-title">{item.product.title}</h5>
                                     <p className="card-text">{item.product.description}</p>
                                     <p className="card-text"><small className="text-muted">Quantity: {item.quantity}</small></p>
+                                    <div className="d-flex justify-content-evenly">
+                                      <button className="btn btn-primary mr-2"><FaEdit /></button>
+                                      <button className="btn btn-danger"><FaTrash /></button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           ))}
                         </Modal.Body>
+                        <Modal.Footer className="d-flex justify-content-between align-items-center">
+  <div className="total-container">
+    <h5 className="mb-0">Total:</h5>
+    <h4 className="mb-0 text-primary">{total} $</h4>
+  </div>
+
+</Modal.Footer>
                         <Modal.Footer>
                           <Button variant="secondary" onClick={handleClose}>
                             Close
