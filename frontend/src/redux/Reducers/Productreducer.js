@@ -1,6 +1,6 @@
 
-import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT ,PRODUCT_CREATE_SUCCESS,UPDATE_PRODUCT_CATEGORY,ADD_TO_CART} from '../Actions/ProductAction';
-import  {getCartFromLocalStorage} from '../utils/localStorage';
+import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT, PRODUCT_CREATE_SUCCESS, UPDATE_PRODUCT_CATEGORY, ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART, SET_CART_ITEMS } from '../Actions/ProductAction';
+import { getCartFromLocalStorage } from '../utils/localStorage';
 
 // Initial state
 const initialState = {
@@ -29,10 +29,10 @@ const productReducer = (state = initialState, action) => {
         ...state,
         products: [...state.products, action.payload],
       };
-      case PRODUCT_CREATE_SUCCESS:
+    case PRODUCT_CREATE_SUCCESS:
       return {
         ...state,
-        success: true, 
+        success: true,
       };
     case UPDATE_PRODUCT:
       return {
@@ -46,20 +46,53 @@ const productReducer = (state = initialState, action) => {
         ...state,
         products: state.products.filter(product => product.id !== action.payload),
       };
-      case UPDATE_PRODUCT_CATEGORY:
+    case UPDATE_PRODUCT_CATEGORY:
       return {
         ...state,
         products: state.products.map(product =>
           product.id === action.payload.id ? { ...product, categoryId: action.payload.categoryId } : product
         ),
       };
-      case ADD_TO_CART:
-        return(
-          {
+    case ADD_TO_CART:
+      return (
+        {
+          ...state,
+          cartItems: getCartFromLocalStorage()
+        }
+      );
+    case REMOVE_FROM_CART:
+      return {
+        ...state,
+        cartItems: state.cartItems.filter(item => item.product.id !== action.payload),
+      };
+    case SET_CART_ITEMS:
+      return {
+        ...state,
+        cartItems: action.payload
+      };
+    case UPDATE_CART:
+      {
+        const { productId, quantity } = action.payload;
+        const productIndex = state.cartItems.findIndex(item => item.product && item.product.id === productId);
+
+        if (productIndex !== -1) {
+          const updatedProduct = {
+            ...state.cartItems[productIndex],
+            quantity: quantity
+          };
+
+          return {
             ...state,
-            cartItems: getCartFromLocalStorage()
-          }
-        )
+            cartItems: [
+              ...state.cartItems.slice(0, productIndex),
+              updatedProduct,
+              ...state.cartItems.slice(productIndex + 1)
+            ]
+          };
+        }
+
+        return state;
+      }
     default:
       return state;
   }

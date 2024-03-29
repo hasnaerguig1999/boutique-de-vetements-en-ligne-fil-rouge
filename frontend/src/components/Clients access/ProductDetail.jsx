@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProduct, addToCart } from '../../redux/Actions/ProductAction';
+import { getProduct, addToCart, updateCart,removeFromCart } from '../../redux/Actions/ProductAction';
 import { getCategory } from '../../redux/Actions/CategoryAction';
 import { FaCartArrowDown, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from 'sweetalert2';
@@ -21,7 +21,6 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
   const product = useSelector(state => state.products.product);
   const { categories } = useSelector(state => state.categories);
-  // const cartItems = useSelector(state => state.products.cartItems);
   const cartItems = useSelector(state => state.products.cartItems);
   const total = cartItems.reduce((acc, item) => item.product ? acc + item.product.price * item.quantity : acc, 0);
 
@@ -35,6 +34,8 @@ export default function ProductDetail() {
   if (!product) {
     return <div>Loading...</div>;
   }
+
+
 
 
   const addToCartHandler = () => {
@@ -54,10 +55,14 @@ export default function ProductDetail() {
     }
   };
 
+  const updateQuantityHandler = (productId, newQuantity) => {
+    dispatch(updateCart(productId, newQuantity));
+  };
 
 
-
-
+  const removeFromCartHandler = (productId) => {
+    dispatch(removeFromCart(productId));
+  };
 
 
 
@@ -101,11 +106,9 @@ export default function ProductDetail() {
                                   <div className="card-body">
                                     <h5 className="card-title">{item.product.title}</h5>
                                     <p className="card-text">{item.product.description}</p>
-                                    <p className="card-text"><small className="text-muted">Quantity: {item.quantity}</small></p>
-                                    <div className="d-flex justify-content-evenly">
-                                      <button className="btn btn-primary mr-2"><FaEdit /></button>
-                                      <button className="btn btn-danger"><FaTrash /></button>
-                                    </div>
+                                    <input type="number" value={item.quantity} onChange={(e) => updateQuantityHandler(item.product.id, e.target.value)} />                                    <div className="d-flex justify-content-evenly mt-2">
+                                      
+                                    <button className="btn btn-danger" style={{marginLeft: '-202px'}} onClick={() => removeFromCartHandler(item.product.id)}><FaTrash /></button>                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -113,12 +116,12 @@ export default function ProductDetail() {
                           ))}
                         </Modal.Body>
                         <Modal.Footer className="d-flex justify-content-between align-items-center">
-  <div className="total-container">
-    <h5 className="mb-0">Total:</h5>
-    <h4 className="mb-0 text-primary">{total} $</h4>
-  </div>
+                          <div className="total-container">
+                            <h5 className="mb-0">Total:</h5>
+                            <h4 className="mb-0 text-primary">{total} $</h4>
+                          </div>
 
-</Modal.Footer>
+                        </Modal.Footer>
                         <Modal.Footer>
                           <Button variant="secondary" onClick={handleClose}>
                             Close
