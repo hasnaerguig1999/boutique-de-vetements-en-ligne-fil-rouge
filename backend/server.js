@@ -5,7 +5,7 @@ import { errorMiddleware } from './middlewares/error';
 import sequelize from './config/database';
 import dotenv from 'dotenv';
 import cors from 'cors';
-const app = express();
+export const app = express();
 
 app.use(cors())
 app.use(express.static('public'))

@@ -1,8 +1,9 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams,useNavigate } from 'react-router-dom';
 import Sidebar from '../Sidebars/Sidebar'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProduct, addToCart, updateCart,removeFromCart } from '../../redux/Actions/ProductAction';
+
+import { getProduct, addToCart, updateCart,removeFromCart,paymentSuccess } from '../../redux/Actions/ProductAction';
 import { getCategory } from '../../redux/Actions/CategoryAction';
 import { FaCartArrowDown, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from 'sweetalert2';
@@ -19,6 +20,7 @@ export default function ProductDetail() {
   const handleShow = () => setShow(true);
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const product = useSelector(state => state.products.product);
   const { categories } = useSelector(state => state.categories);
   const cartItems = useSelector(state => state.products.cartItems);
@@ -64,6 +66,11 @@ export default function ProductDetail() {
     dispatch(removeFromCart(productId));
   };
 
+  const handlePayment = () => {
+    dispatch(paymentSuccess());
+    navigate('/DisplayProduct');
+    
+  };
 
 
 
@@ -123,7 +130,10 @@ export default function ProductDetail() {
 
                         </Modal.Footer>
                         <Modal.Footer>
-                          <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="secondary" onClick={handlePayment} >
+                            Payé
+                          </Button>
+                          <Button variant="primary" onClick={handleClose}>
                             Close
                           </Button>
                         </Modal.Footer>

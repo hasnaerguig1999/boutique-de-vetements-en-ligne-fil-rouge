@@ -1,5 +1,5 @@
 
-import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT, PRODUCT_CREATE_SUCCESS, UPDATE_PRODUCT_CATEGORY, ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART, SET_CART_ITEMS } from '../Actions/ProductAction';
+import { GET_PRODUCTS, GET_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT, PRODUCT_CREATE_SUCCESS, UPDATE_PRODUCT_CATEGORY, ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART, SET_CART_ITEMS,PAYMENT_SUCCESS } from '../Actions/ProductAction';
 import { getCartFromLocalStorage } from '../utils/localStorage';
 
 // Initial state
@@ -65,6 +65,8 @@ const productReducer = (state = initialState, action) => {
         ...state,
         cartItems: state.cartItems.filter(item => item.product.id !== action.payload),
       };
+      case PAYMENT_SUCCESS:
+      return initialState;
     case SET_CART_ITEMS:
       return {
         ...state,

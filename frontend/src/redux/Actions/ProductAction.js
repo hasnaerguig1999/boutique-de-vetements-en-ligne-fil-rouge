@@ -24,6 +24,8 @@ export const INIT_CART = 'INIT_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const UPDATE_CART = 'UPDATE_CART';
 export const SET_CART_ITEMS = 'SET_CART_ITEMS';
+export const PAYMENT_SUCCESS = 'PAYMENT_SUCCESS';
+
 
 
 
@@ -142,5 +144,18 @@ export const removeFromCart = productId => {
   return {
     type: REMOVE_FROM_CART,
     payload: productId
+  };
+};
+
+
+export const paymentSuccess = () => {
+  // Afficher une alerte
+  window.alert('Vous avez payé avec succès');
+
+  // Supprimer les produits du panier du localStorage
+  localStorage.removeItem('cart');
+
+  return {
+    type: PAYMENT_SUCCESS,
   };
 };
